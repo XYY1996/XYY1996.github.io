@@ -86,7 +86,7 @@
 <meta property="og:site_name" content="小徐札记">
 <meta property="og:description" content="异常处理小记本文对互联上关于异常处理的博客文章进行了整理和总结。如有意(xiao)见(sheng)或建(B)议(B)可以发邮件给我，万分感谢。当前并没有列举相应的工程实例和本人的异常实践，之后会慢慢打磨完善，To Be Continued… 小记 使用try..catch..finally..编程模式。 异常捕获不绝对影响程序的性能。 不在try语句块里放置大量代码。 多个函数使用独立的catch">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-11-26T02:28:09.370Z">
+<meta property="og:updated_time" content="2018-11-26T02:40:07.543Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="异常处理小记">
 <meta name="twitter:description" content="异常处理小记本文对互联上关于异常处理的博客文章进行了整理和总结。如有意(xiao)见(sheng)或建(B)议(B)可以发邮件给我，万分感谢。当前并没有列举相应的工程实例和本人的异常实践，之后会慢慢打磨完善，To Be Continued… 小记 使用try..catch..finally..编程模式。 异常捕获不绝对影响程序的性能。 不在try语句块里放置大量代码。 多个函数使用独立的catch">
@@ -301,23 +301,31 @@
       
         <h1 id="异常处理小记"><a href="#异常处理小记" class="headerlink" title="异常处理小记"></a>异常处理小记</h1><p>本文对互联上<a href="#相关主题">关于异常处理的博客文章</a>进行了整理和总结。如有意(xiao)见(sheng)或建(B)议(B)可以<a href="mailto:mr.xu.robot.zh@gmail.com" target="_blank" rel="noopener">发邮件给我</a>，万分感谢。<br>当前并没有列举相应的工程实例和本人的异常实践，之后会慢慢打磨完善，To Be Continued…</p>
 <h2 id="小记"><a href="#小记" class="headerlink" title="小记"></a>小记</h2><ul>
-<li>使用try..catch..finally..编程模式。</li>
-<li>异常捕获不绝对影响程序的性能。</li>
-<li>不在try语句块里放置大量代码。</li>
-<li>多个函数使用独立的catch。</li>
-<li>编程时不要忽略任何异常。</li>
-<li>程序出现异常尽量立即处理。</li>
-<li>编程应准确的区分各种异常。</li>
-<li>不使用异常处理业务逻辑。</li>
-<li>正确处理NullPointException。</li>
-<li>循环中不放置异常代码。</li>
-<li>异常处理后清理分配资源。</li>
-<li>精简打印异常日志。</li>
-<li>打印异常关键信息。</li>
-<li>合理考虑日志框架。</li>
-<li>避免在前台出现错误代码。</li>
-<li>异端，不要catch异常，不要做空判断，异常抛到最外层处理。<h2 id="使用try-catch-finally-编程模式。"><a href="#使用try-catch-finally-编程模式。" class="headerlink" title="使用try{..}catch..finally..编程模式。"></a>使用try{..}catch..finally..编程模式。</h2><h4 id="让代码自己解释自己。"><a href="#让代码自己解释自己。" class="headerlink" title="让代码自己解释自己。"></a>让代码自己解释自己。</h4>语言本身支持<strong>相当先进的Union类型</strong>，本身能非常直观的看出函数接口的输入输出以及错误的处理，让代码自己解释自己。<h4 id="分离正常逻辑、错误处理和资源清理代码。"><a href="#分离正常逻辑、错误处理和资源清理代码。" class="headerlink" title="分离正常逻辑、错误处理和资源清理代码。"></a>分离正常逻辑、错误处理和资源清理代码。</h4>分离代码，在try语句块中添加正常的业务逻辑，而在catch中处理错误，在finally中清理资源，<strong>提高代码的可读性</strong>。<h4 id="无法忽略异常。"><a href="#无法忽略异常。" class="headerlink" title="无法忽略异常。"></a>无法忽略异常。</h4>代码在尝试后出现异常无法被直接忽略，这里使用catch后不处理，不抛出，其实是显示的忽略。<h4 id="多态式catch。"><a href="#多态式catch。" class="headerlink" title="多态式catch。"></a>多态式catch。</h4><strong>同类错误的定义最好是可以扩展的</strong>。这一点非常重要，而对于这一点，通过面向对象的继承或是像 Go 语言那样的接口多态可以很好地做到。在面向对象的语言中（如Java），异常是个对象，所以可以实现多态式catch。这样可以方便地重用已有的代码。<h4 id="实现函数的链式或嵌套调用。"><a href="#实现函数的链式或嵌套调用。" class="headerlink" title="实现函数的链式或嵌套调用。"></a>实现函数的链式或嵌套调用。</h4>与状态返回码相比，异常捕获有一个显著的的好处式是，<strong>函数可以嵌套调用，或是链式调用</strong>。比如:int x = add(a,div(b,c));或者<br>Pizza p = PizzaBulid().SetSize(sz).SetPrice(p)…，在需要返回码的情况下，比较难以实现。<h4 id="异步的情形下实现难度较大。"><a href="#异步的情形下实现难度较大。" class="headerlink" title="异步的情形下实现难度较大。"></a>异步的情形下实现难度较大。</h4>异步的try语句块中运行在另一个线程中，<strong>异常的抛出无法在调用者线程中被捕获</strong>，这是一个大问题。<h2 id="异常捕获不绝对影响程序的性能。"><a href="#异常捕获不绝对影响程序的性能。" class="headerlink" title="异常捕获不绝对影响程序的性能。"></a>异常捕获不绝对影响程序的性能。</h2><h4 id="程序在执行需要处理函数栈上的上下文。"><a href="#程序在执行需要处理函数栈上的上下文。" class="headerlink" title="程序在执行需要处理函数栈上的上下文。"></a>程序在执行需要处理函数栈上的上下文。</h4>异常捕捉的确是对性能有影响的，那是因为一旦异常被抛出，函数也就跟着 return 了。而程序在执行需要<strong>处理函数栈上的上下文</strong>，这会导致性能变得很慢，尤其是函数栈比较深的时候。<h4 id="有异常的情况是少数的情况。"><a href="#有异常的情况是少数的情况。" class="headerlink" title="有异常的情况是少数的情况。"></a>有异常的情况是少数的情况。</h4>但从另一方面来说，<strong>异常的抛出基本上表明程序的错误。程序在绝大多数情况下，应该是在没有异常的情况下运行的</strong>，所以，有异常的情况应该是少数的情况，不会影响正常处理的性能问题。</li>
+<li><a href="#使用try..catch..finally..编程模式。">使用try..catch..finally..编程模式。</a></li>
+<li><a href="#异常捕获不绝对影响程序的性能。">异常捕获不绝对影响程序的性能。</a></li>
+<li><a href="#不在try语句块里放置大量代码。">不在try语句块里放置大量代码。</a></li>
+<li><a href="#多个函数使用独立的catch。">多个函数使用独立的catch。</a></li>
+<li><a href="#编程时不要忽略任何异常。">编程时不要忽略任何异常。</a></li>
+<li><a href="#程序出现异常尽量立即处理。">程序出现异常尽量立即处理。</a></li>
+<li><a href="#编程应准确的区分各种异常。">编程应准确的区分各种异常。</a></li>
+<li><a href="#不使用异常处理业务逻辑。">不使用异常处理业务逻辑。</a></li>
+<li><a href="#正确处理NullPointException。">正确处理NullPointException。</a></li>
+<li><a href="#循环中不放置异常代码。">循环中不放置异常代码。</a></li>
+<li><a href="#异常处理后清理分配资源。">异常处理后清理分配资源。</a></li>
+<li><a href="#精简打印异常日志。">精简打印异常日志。</a></li>
+<li><a href="#打印异常关键信息。">打印异常关键信息。</a></li>
+<li><a href="#合理考虑日志框架。">合理考虑日志框架。</a></li>
+<li><a href="#避免在前台出现错误代码。">避免在前台出现错误代码。</a></li>
+<li><a href="#异端，不要catch异常，不要做空判断，异常抛到最外层处理。">异端，不要catch异常，不要做空判断，异常抛到最外层处理。</a></li>
 </ul>
+<h2 id="使用try-catch-finally-编程模式。"><a href="#使用try-catch-finally-编程模式。" class="headerlink" title="使用try{..}catch..finally..编程模式。"></a>使用try{..}catch..finally..编程模式。</h2><h4 id="让代码自己解释自己。"><a href="#让代码自己解释自己。" class="headerlink" title="让代码自己解释自己。"></a>让代码自己解释自己。</h4><p>语言本身支持<strong>相当先进的Union类型</strong>，本身能非常直观的看出函数接口的输入输出以及错误的处理，让代码自己解释自己。</p>
+<h4 id="分离正常逻辑、错误处理和资源清理代码。"><a href="#分离正常逻辑、错误处理和资源清理代码。" class="headerlink" title="分离正常逻辑、错误处理和资源清理代码。"></a>分离正常逻辑、错误处理和资源清理代码。</h4><p>分离代码，在try语句块中添加正常的业务逻辑，而在catch中处理错误，在finally中清理资源，<strong>提高代码的可读性</strong>。</p>
+<h4 id="无法忽略异常。"><a href="#无法忽略异常。" class="headerlink" title="无法忽略异常。"></a>无法忽略异常。</h4><p>代码在尝试后出现异常无法被直接忽略，这里使用catch后不处理，不抛出，其实是显示的忽略。</p>
+<h4 id="多态式catch。"><a href="#多态式catch。" class="headerlink" title="多态式catch。"></a>多态式catch。</h4><p><strong>同类错误的定义最好是可以扩展的</strong>。这一点非常重要，而对于这一点，通过面向对象的继承或是像 Go 语言那样的接口多态可以很好地做到。在面向对象的语言中（如Java），异常是个对象，所以可以实现多态式catch。这样可以方便地重用已有的代码。</p>
+<h4 id="实现函数的链式或嵌套调用。"><a href="#实现函数的链式或嵌套调用。" class="headerlink" title="实现函数的链式或嵌套调用。"></a>实现函数的链式或嵌套调用。</h4><p>与状态返回码相比，异常捕获有一个显著的的好处式是，<strong>函数可以嵌套调用，或是链式调用</strong>。比如:int x = add(a,div(b,c));或者<br>Pizza p = PizzaBulid().SetSize(sz).SetPrice(p)…，在需要返回码的情况下，比较难以实现。</p>
+<h4 id="异步的情形下实现难度较大。"><a href="#异步的情形下实现难度较大。" class="headerlink" title="异步的情形下实现难度较大。"></a>异步的情形下实现难度较大。</h4><p>异步的try语句块中运行在另一个线程中，<strong>异常的抛出无法在调用者线程中被捕获</strong>，这是一个大问题。</p>
+<h2 id="异常捕获不绝对影响程序的性能。"><a href="#异常捕获不绝对影响程序的性能。" class="headerlink" title="异常捕获不绝对影响程序的性能。"></a>异常捕获不绝对影响程序的性能。</h2><h4 id="程序在执行需要处理函数栈上的上下文。"><a href="#程序在执行需要处理函数栈上的上下文。" class="headerlink" title="程序在执行需要处理函数栈上的上下文。"></a>程序在执行需要处理函数栈上的上下文。</h4><p>异常捕捉的确是对性能有影响的，那是因为一旦异常被抛出，函数也就跟着 return 了。而程序在执行需要<strong>处理函数栈上的上下文</strong>，这会导致性能变得很慢，尤其是函数栈比较深的时候。</p>
+<h4 id="有异常的情况是少数的情况。"><a href="#有异常的情况是少数的情况。" class="headerlink" title="有异常的情况是少数的情况。"></a>有异常的情况是少数的情况。</h4><p>但从另一方面来说，<strong>异常的抛出基本上表明程序的错误。程序在绝大多数情况下，应该是在没有异常的情况下运行的</strong>，所以，有异常的情况应该是少数的情况，不会影响正常处理的性能问题。</p>
 <h2 id="不在try语句块里放置大量代码。"><a href="#不在try语句块里放置大量代码。" class="headerlink" title="不在try语句块里放置大量代码。"></a>不在try语句块里放置大量代码。</h2><h4 id="完成一个简单单一的事情。"><a href="#完成一个简单单一的事情。" class="headerlink" title="完成一个简单单一的事情。"></a>完成一个简单单一的事情。</h4><p>一个 try 语句块内的语句应该是完成<strong>一个简单单一</strong>的事情。</p>
 <h4 id="大大加速你的调试过程。"><a href="#大大加速你的调试过程。" class="headerlink" title="大大加速你的调试过程。"></a>大大加速你的调试过程。</h4><p>减少try{..}catch里的代码量，提供更加精确的错误信息，<strong>大大加速你的调试过程</strong>。</p>
 <h2 id="多个函数使用独立的catch。"><a href="#多个函数使用独立的catch。" class="headerlink" title="多个函数使用独立的catch。"></a>多个函数使用独立的catch。</h2><h4 id="不使用覆盖式处理器如基类Exception去捕获异常。"><a href="#不使用覆盖式处理器如基类Exception去捕获异常。" class="headerlink" title="不使用覆盖式处理器如基类Exception去捕获异常。"></a>不使用覆盖式处理器如基类Exception去捕获异常。</h4><p>原本针对性的异常处理，变成宽泛，容易捕获其它的异常，当覆盖式处理器对新异常类执行千篇一律的任务时，<strong>只能间接看到异常的处理结果</strong>。如果代码没有打印或记录语句，则根本看不到结果。更糟糕的是，当代码发生变化时，<strong>覆盖式处理器将继续作用于所有新异常类型</strong>，并以相同方式处理所有类型。</p>
@@ -373,11 +381,13 @@
 <h2 id="避免在前台出现错误代码。"><a href="#避免在前台出现错误代码。" class="headerlink" title="避免在前台出现错误代码。"></a>避免在前台出现错误代码。</h2><h4 id="对于客户来说任何异常都没有实际意义。"><a href="#对于客户来说任何异常都没有实际意义。" class="headerlink" title="对于客户来说任何异常都没有实际意义。"></a>对于客户来说任何异常都没有实际意义。</h4><p>将异常直接打印在客户端的例子屡见不鲜，以 JSP 为例，一旦代码运行出现异常，默认情况下容器将异常堆栈信息直接打印在页面上。其实<strong>从客户角度来说，任何异常都没有实际意义</strong>，绝大多数的客户也根本看不懂异常信息，软件开发也要<strong>尽量避免将异常直接呈现给用户</strong>。在异常中引入错误代码，一旦出现异常，我们只要将异常的错误代码呈现给用户，或者将错误代码转换成更通俗易懂的提示。其实这里的错误代码还包含另外一个功能，<strong>开发人员亦可以根据错误代码准确的知道了发生了什么类型异常</strong>。</p>
 <h2 id="异端，不要catch异常，不要做空判断，异常抛到最外层处理。"><a href="#异端，不要catch异常，不要做空判断，异常抛到最外层处理。" class="headerlink" title="异端，不要catch异常，不要做空判断，异常抛到最外层处理。"></a>异端，不要catch异常，不要做空判断，异常抛到最外层处理。</h2><h4 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h4><p>开发团队的成员代码水平参差不齐，<strong>对NULL和异常处理手段不恰当</strong>，导致错误在生产环境出现后，<strong>无法找到错误原因</strong>，更有甚者，连<strong>系统出错了也没有人知道</strong>。</p>
 <h4 id="开发组长定义好异常，异常继承RuntimeException。"><a href="#开发组长定义好异常，异常继承RuntimeException。" class="headerlink" title="开发组长定义好异常，异常继承RuntimeException。"></a>开发组长定义好异常，异常继承RuntimeException。</h4><ul>
-<li>非检查异常（unckecked exception）：Error 和 RuntimeException 以及他们的子类。javac在编译时，<strong>不会提示和发现这样的异常，不要求在程序处理这些异常</strong>。所以如果愿意，我们可以编写代码处理（使用try…catch…finally）这样的异常，也可以不处理。对于这些异常，我们应该修正代码，而不是去通过异常处理器处理 。这样的异常发生的原因多半是代码写的有问题。如除0错误ArithmeticException，错误的强制类型转换错误ClassCastException，数组索引越界ArrayIndexOutOfBoundsException，使用了空对象NullPointerException等等。<ul>
-<li>检查异常（checked exception）：除了Error 和 RuntimeException的其它异常。javac强制要求程序员为这样的异常做预备处理工作（使用try…catch…finally或者throws）。在方法中要么用try-catch语句捕获它并处理，要么用throws子句声明抛出它，否则编译不会通过。这样的异常一般是由程序的运行环境导致的。因为程序可能被运行在各种未知的环境下，而程序员无法干预用户如何使用他编写的程序，于是程序员就应该为这样的异常时刻准备着。如SQLException , IOException,ClassNotFoundException 等。<h4 id="不允许开发人员捕获异常。"><a href="#不允许开发人员捕获异常。" class="headerlink" title="不允许开发人员捕获异常。"></a>不允许开发人员捕获异常。</h4>正对以上非检测和检测异常的定义，异常上对开发人员就一点要求：<strong>不允许开发人员捕获异常</strong>，<strong>异常都抛出到controller上用AOP处理</strong>。后台（如队列等）<strong>异常一定要有通知机制</strong>，要<strong>第一时间知道异常</strong>。<h4 id="少加空判断，加了空判断就要测试为空的场景！"><a href="#少加空判断，加了空判断就要测试为空的场景！" class="headerlink" title="少加空判断，加了空判断就要测试为空的场景！"></a>少加空判断，加了空判断就要测试为空的场景！</h4><strong>空判断大部分时候不需要</strong>，你如果写了空判断，你就<strong>必须测试为空和不为空二种场景</strong>，要么就<strong>不要写空判断</strong>。</li>
+<li>非检查异常（unckecked exception）：Error 和 RuntimeException 以及他们的子类。javac在编译时，<strong>不会提示和发现这样的异常，不要求在程序处理这些异常</strong>。所以如果愿意，我们可以编写代码处理（使用try…catch…finally）这样的异常，也可以不处理。对于这些异常，我们应该修正代码，而不是去通过异常处理器处理 。这样的异常发生的原因多半是代码写的有问题。如除0错误ArithmeticException，错误的强制类型转换错误ClassCastException，数组索引越界ArrayIndexOutOfBoundsException，使用了空对象NullPointerException等等。</li>
 </ul>
-</li>
+<ul>
+<li>检查异常（checked exception）：除了Error 和 RuntimeException的其它异常。javac强制要求程序员为这样的异常做预备处理工作（使用try…catch…finally或者throws）。在方法中要么用try-catch语句捕获它并处理，要么用throws子句声明抛出它，否则编译不会通过。这样的异常一般是由程序的运行环境导致的。因为程序可能被运行在各种未知的环境下，而程序员无法干预用户如何使用他编写的程序，于是程序员就应该为这样的异常时刻准备着。如SQLException , IOException,ClassNotFoundException 等。</li>
 </ul>
+<h4 id="不允许开发人员捕获异常。"><a href="#不允许开发人员捕获异常。" class="headerlink" title="不允许开发人员捕获异常。"></a>不允许开发人员捕获异常。</h4><p>正对以上非检测和检测异常的定义，异常上对开发人员就一点要求：<strong>不允许开发人员捕获异常</strong>，<strong>异常都抛出到controller上用AOP处理</strong>。后台（如队列等）<strong>异常一定要有通知机制</strong>，要<strong>第一时间知道异常</strong>。</p>
+<h4 id="少加空判断，加了空判断就要测试为空的场景！"><a href="#少加空判断，加了空判断就要测试为空的场景！" class="headerlink" title="少加空判断，加了空判断就要测试为空的场景！"></a>少加空判断，加了空判断就要测试为空的场景！</h4><p><strong>空判断大部分时候不需要</strong>，你如果写了空判断，你就<strong>必须测试为空和不为空二种场景</strong>，要么就<strong>不要写空判断</strong>。</p>
 <h2 id="相关主题"><a href="#相关主题" class="headerlink" title="相关主题"></a>相关主题</h2><p><a href="http://www.yinwang.org/blog-cn/2015/11/21/programming-philosophy" target="_blank" rel="noopener">编程的智慧 - 王垠</a>用平易进人的词句阐述了自己对编程独到的理解，并且每个观点都给出了有一定深度的工程实践实例，值得一读。<br><a href="https://time.geekbang.org/column/article/675" target="_blank" rel="noopener">程序中的错误处理：错误返回码和异常捕捉 - 左耳听风</a>从编程语言的发展历程解释了异常的来源和发展，并给出了不同语言环境下处理错误的方法。<br><a href="https://time.geekbang.org/column/article/693" target="_blank" rel="noopener">程序中的错误处理：异步编程和最佳实践 - 左耳听风</a>讲解了异步编程下的异常处理。<br><a href="https://xwjie.github.io/rule/exception.html" target="_blank" rel="noopener">异常处理 - 晓风轻</a>从自身实际项目实践角度给出了异常处理的几条规则，其中的解决思路值得学习。<br><a href="https://www.ibm.com/developerworks/cn/java/j-lo-exception-misdirection/index.html" target="_blank" rel="noopener">Java 异常处理的误区和经验总结</a>较为严谨的分析了异常处理相关的问题，并给出了相关实例的实践。</p>
 
       
