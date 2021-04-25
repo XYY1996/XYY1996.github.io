@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<form>
+<input id="data" style="width:500px;height:100px;" type="text" name="url" value="">
+<br>
+<input type="submit" value="Submit" onclick="redirect()">
+</form> 
+</body>
+<script type="text/javascript">
+function redirect() {
+var url=document.getElementById("data").value;
+window.open(url);
+}
+</script>
+</html>
